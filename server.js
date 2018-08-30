@@ -4,6 +4,8 @@ const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 require('dotenv').config()
 
+const userRoute = require('./api/routes/user')
+
 // CORS Handling
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*')
@@ -22,6 +24,8 @@ app.use(bodyParser.urlencoded({
   extended: false
 }))
 app.use(bodyParser.json())
+
+app.use('/user', userRoute)
 
 // Connect to mlab
 mongoose
