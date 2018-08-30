@@ -17,4 +17,4 @@ Front-end: Vue.js <br />
 Database: MongoDB <br />
 Back-end: Express.js <br />
 Authentication: JWT <br />
-Scraping: Cherio <br />
+Scraping: Cheerio <br />

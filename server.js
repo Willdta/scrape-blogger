@@ -25,6 +25,7 @@ app.use(bodyParser.urlencoded({
 }))
 app.use(bodyParser.json())
 
+// All User Routes
 app.use('/user', userRoute)
 
 // Connect to mlab
