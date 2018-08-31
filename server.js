@@ -6,6 +6,9 @@ require('dotenv').config()
 
 const userRoute = require('./api/routes/user')
 
+// Remove Later
+const testRoute = require('./api/routes/test')
+
 // CORS Handling
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*')
@@ -27,6 +30,9 @@ app.use(bodyParser.json())
 
 // All User Routes
 app.use('/user', userRoute)
+
+// Remove Later
+app.use('/test', testRoute)
 
 // Connect to mlab
 mongoose
