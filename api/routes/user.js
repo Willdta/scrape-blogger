@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
 const User = require('../models/user')
 
 router.post('/signup', (req, res) => {
@@ -59,7 +60,15 @@ router.post('/signin', (req, res) => {
         }
 
         if (result) {
-          res.status(200).json({ message: 'Successful login' })
+          const token = jwt.sign({
+            userId: user._id,
+            email: user.email
+          }, process.env.JWT_TOKEN)
+
+          res.status(200).json({ 
+            message: 'Successful login', 
+            token
+          })
         } else {
           res.status(400).json({ message: 'Invalid Password' })
         }
