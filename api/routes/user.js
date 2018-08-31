@@ -4,6 +4,8 @@ const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const User = require('../models/user')
+const verifyAuth = require('../middleware/auth')
+require('dotenv').config()
 
 router.post('/signup', (req, res) => {
   User
@@ -63,17 +65,24 @@ router.post('/signin', (req, res) => {
           const token = jwt.sign({
             userId: user._id,
             email: user.email
-          }, process.env.JWT_TOKEN)
+          }, process.env.JWT_TOKEN, {
+            expiresIn: '1h'
+          })
 
           res.status(200).json({ 
             message: 'Successful login', 
             token
           })
-        } else {
-          res.status(400).json({ message: 'Invalid Password' })
         }
+        
+        res.status(404).json({ message: 'Unauthorized' })
       })
     })
+})
+
+// Test Route for JWT Verification
+router.get('/test', verifyAuth, (req, res) => {
+  res.json({ message: 'hey' })
 })
 
 module.exports = router
