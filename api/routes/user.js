@@ -45,4 +45,26 @@ router.post('/signup', (req, res) => {
     })
 })
 
+router.post('/signin', (req, res) => {
+  User
+    .findOne({ email: req.body.email })
+    .then(user => {
+      if (!user) {
+        res.status(404).json({ message: 'Email doesn\'t exist' })
+      }
+
+      bcrypt.compare(req.body.password, user.password, (err, result) => {
+        if (err) {
+          res.status(500).json({ message: 'Something went wrong' })    
+        }
+
+        if (result) {
+          res.status(200).json({ message: 'Successful login' })
+        } else {
+          res.status(400).json({ message: 'Invalid Password' })
+        }
+      })
+    })
+})
+
 module.exports = router
