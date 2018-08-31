@@ -3,8 +3,8 @@ const router = express.Router()
 const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+const passport = require('passport')
 const User = require('../models/user')
-const verifyAuth = require('../middleware/auth')
 require('dotenv').config()
 
 router.post('/signup', (req, res) => {
@@ -81,8 +81,8 @@ router.post('/signin', (req, res) => {
 })
 
 // Test Route for JWT Verification
-router.get('/test', verifyAuth, (req, res) => {
-  res.json({ message: 'hey' })
+router.get('/test', passport.authenticate('jwt', { session: false }), (req, res) => {
+  res.status(200).json({ message: 'hey' })
 })
 
 module.exports = router

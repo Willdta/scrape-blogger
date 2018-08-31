@@ -1,18 +1,23 @@
-const jwt = require('jsonwebtoken')
+require('dotenv').config()
+const User = require('../models/user')
 
-module.exports = (req, res, next) => {
-  const bearerHeader = req.headers['authorization']
+const JwtStrategy = require('passport-jwt').Strategy
+const ExtractJwt = require('passport-jwt').ExtractJwt
+const opts = {}
+opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken()
+opts.secretOrKey = process.env.JWT_TOKEN
 
-  if (typeof bearerHeader !== undefined) {
-    const bearerToken = bearerHeader.split(' ')[1]
-    req.token = bearerToken
+// Here we are checking to see whether we can find the user that
+// matches the email associated with the token
+// If true, you can access the route as you are authenticated
+module.exports = new JwtStrategy(opts, (jwt_payload, done) => {
+  User.findOne({
+    email: jwt_payload.email
+  }, (err, user) => {
+    if (user) {
+      return done(null, user)
+    }
 
-    jwt.verify(req.token, process.env.JWT_TOKEN, (err, data) => {
-      err ? res.status(404) : res.status(200).json({ data })
-    })
-
-    next()
-  } else {
-    res.status(403)
-  }
-}
+    return done(err, false)
+  })
+})
